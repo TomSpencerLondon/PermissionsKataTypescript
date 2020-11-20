@@ -11,17 +11,23 @@ type Rights = {
 };
 
 export const permissions = (productions: Production[]): Rights => {
-  if (productions.length > 0) {
-    const production: Production = { name: "production1", allow: [], deny: [] };
-    return {
-      US: [production.name],
-      UK: [production.name],
-      ROW: [production.name],
-    };
-  }
+  const usProductions: string[] = [];
+  const ukProductions: string[] = [];
+  const rowProductions: string[] = [];
+
+  productions.forEach((production) => {
+    if (production.allow.includes("US")) {
+      usProductions.push(production.name);
+    } else {
+      usProductions.push(production.name);
+      ukProductions.push(production.name);
+      rowProductions.push(production.name);
+    }
+  });
+
   return {
-    US: [],
-    UK: [],
-    ROW: [],
+    US: usProductions,
+    UK: ukProductions,
+    ROW: rowProductions,
   };
 };
