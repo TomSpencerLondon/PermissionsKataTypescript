@@ -11,23 +11,25 @@ type Rights = {
 };
 
 export const permissions = (productions: Production[]): Rights => {
-  const usProductions: string[] = [];
-  const ukProductions: string[] = [];
-  const rowProductions: string[] = [];
+  const Production: Map<string, string[]> = new Map();
+  Production.set("US", []);
+  Production.set("UK", []);
+  Production.set("ROW", []);
 
   productions.forEach((production) => {
-    if (production.allow.includes("US")) {
-      usProductions.push(production.name);
-    } else {
-      usProductions.push(production.name);
-      ukProductions.push(production.name);
-      rowProductions.push(production.name);
+    if (production.allow.length === 0) {
+      Production.forEach((value: string[], key: string) => {
+        value.push(production.name);
+      });
     }
+    production.allow.forEach((country) => {
+      Production.get(country).push(production.name);
+    });
   });
 
   return {
-    US: usProductions,
-    UK: ukProductions,
-    ROW: rowProductions,
+    US: Production.get("US"),
+    UK: Production.get("UK"),
+    ROW: Production.get("ROW"),
   };
 };
