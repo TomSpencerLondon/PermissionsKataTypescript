@@ -17,9 +17,17 @@ export const permissions = (productions: Production[]): Rights => {
   Production.set("ROW", []);
 
   productions.forEach((production) => {
-    if (production.allow.length === 0) {
+    if (production.allow.length === 0 && production.deny.length === 0) {
       Production.forEach((value: string[]) => {
         value.push(production.name);
+      });
+    } else if (production.deny.length > 0) {
+      Production.forEach((value: string[], key: string) => {
+        production.deny.forEach((d) => {
+          if (key !== d) {
+            value.push(production.name);
+          }
+        });
       });
     }
     production.allow.forEach((country) => {
