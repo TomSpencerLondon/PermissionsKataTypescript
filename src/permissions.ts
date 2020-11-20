@@ -18,7 +18,7 @@ export const permissions = (productions: Production[]): Rights => {
 
   productions.forEach((production) => {
     if (production.allow.length === 0) {
-      Production.forEach((value: string[], key: string) => {
+      Production.forEach((value: string[]) => {
         value.push(production.name);
       });
     }
