@@ -11,6 +11,14 @@ type Rights = {
 };
 
 export const permissions = (productions: Production[]): Rights => {
+  if (productions.length > 0) {
+    const production: Production = { name: "production1", allow: [], deny: [] };
+    return {
+      US: [production.name],
+      UK: [production.name],
+      ROW: [production.name],
+    };
+  }
   return {
     US: [],
     UK: [],

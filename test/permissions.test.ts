@@ -30,10 +30,17 @@
 import { permissions } from "../src/permissions";
 
 describe("Permissions", () => {
-  it.each([[[], { US: [], UK: [], ROW: [] }]])(
-    "returns correct object for input",
-    (input, output) => {
-      expect(permissions(input)).toEqual(output);
-    }
-  );
+  it.each([
+    [[], { US: [], UK: [], ROW: [] }],
+    [
+      [{ name: "production1", allow: [], deny: [] }],
+      {
+        US: ["production1"],
+        UK: ["production1"],
+        ROW: ["production1"],
+      },
+    ],
+  ])("returns correct object for input", (input, output) => {
+    expect(permissions(input)).toEqual(output);
+  });
 });
