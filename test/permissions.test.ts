@@ -80,6 +80,22 @@ describe("Permissions", () => {
         ROW: ["production1"],
       },
     ],
+    [
+      [{ name: "production1", allow: [], deny: ["IN"] }],
+      {
+        US: ["production1"],
+        UK: ["production1"],
+        ROW: ["production1"],
+      },
+    ],
+    [
+      [{ name: "production1", allow: ["IN"], deny: [] }],
+      {
+        US: ["production1"],
+        UK: ["production1"],
+        ROW: ["production1"],
+      },
+    ],
   ])("returns correct object for input", (input, output) => {
     expect(permissions(input)).toEqual(output);
   });

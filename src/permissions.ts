@@ -16,6 +16,9 @@ export const permissions = (productions: Production[]): Rights => {
   Production.set("UK", []);
   Production.set("ROW", []);
 
+  const ROW: Map<string, string> = new Map();
+  ROW.set("IN", "ROW");
+
   productions.forEach((production) => {
     if (production.allow.length === 0 && production.deny.length === 0) {
       Production.forEach((value: string[]) => {
@@ -28,8 +31,15 @@ export const permissions = (productions: Production[]): Rights => {
         }
       });
     }
+
     production.allow.forEach((country) => {
-      Production.get(country).push(production.name);
+      if (ROW.has(country)) {
+        Production.forEach((value: string[]) => {
+          value.push(production.name);
+        });
+      } else {
+        Production.get(country).push(production.name);
+      }
     });
   });
 
