@@ -16,7 +16,8 @@ export const permissions = (productions: Production[]): Rights => {
     ["UK", []],
     ["ROW", []],
   ]);
-  const row = new Set(["IN", "ROW"]);
+
+  const row = new Set(["IN"]);
 
   productions.forEach((production) => {
     if (production.allow.length === 0 && production.deny.length === 0) {
