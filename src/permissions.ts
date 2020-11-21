@@ -11,13 +11,12 @@ type Rights = {
 };
 
 export const permissions = (productions: Production[]): Rights => {
-  const Production: Map<string, string[]> = new Map();
-  Production.set("US", []);
-  Production.set("UK", []);
-  Production.set("ROW", []);
-
-  const ROW: Map<string, string> = new Map();
-  ROW.set("IN", "ROW");
+  const Production: Map<string, string[]> = new Map([
+    ["US", []],
+    ["UK", []],
+    ["ROW", []],
+  ]);
+  const ROW: Map<string, string> = new Map([["IN", "ROW"]]);
 
   productions.forEach((production) => {
     if (production.allow.length === 0 && production.deny.length === 0) {
