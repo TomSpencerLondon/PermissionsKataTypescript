@@ -224,6 +224,18 @@ describe("Permissions", () => {
           ROW: ["production2"],
         },
       ],
+      [
+        "allow US, deny DK",
+        [
+          { name: "production1", allow: ["ROW"], deny: [] },
+          { name: "production2", allow: [], deny: ["DK"] },
+        ],
+        {
+          US: ["production2"],
+          UK: ["production2"],
+          ROW: ["production1", "production2"],
+        },
+      ],
     ])(
       "with %s list of Productions is included in the correct set",
       (_contentType, input, output) => {
