@@ -11,43 +11,35 @@ type Rights = {
 };
 
 export const permissions = (productions: Production[]): Rights => {
-  const Production: Map<string, string[]> = new Map([
-    ["US", []],
-    ["UK", []],
-    ["ROW", []],
-  ]);
+  const result = {
+    US: [],
+    UK: [],
+    ROW: [],
+  };
 
-  const row = new Set(["IN"]);
+  productions = productions.map((production) => ({
+    name: production.name,
+    allow: production.allow.filter((element) =>
+      Object.keys(result).includes(element)
+    ),
+    deny: production.deny.filter((element) =>
+      Object.keys(result).includes(element)
+    ),
+  }));
 
   productions.forEach((production) => {
-    if (production.allow.length === 0 && production.deny.length === 0) {
-      Production.forEach((value: string[]) => {
-        value.push(production.name);
-      });
-    } else if (production.deny.length > 0) {
-      Production.forEach((value: string[], key: string) => {
-        if (!production.deny.includes(key) && production.allow.length === 0) {
-          value.push(production.name);
+    if (production.allow.length === 0) {
+      Object.keys(result).forEach((country) => {
+        if (!production.deny.includes(country)) {
+          result[country].push(production.name);
         }
       });
+    } else {
+      production.allow.forEach((country) => {
+        result[country].push(production.name);
+      });
     }
-
-    production.allow.forEach((country) => {
-      if (row.has(country)) {
-        Production.forEach((value: string[], key: string) => {
-          if (!production.deny.includes(key)) {
-            value.push(production.name);
-          }
-        });
-      } else {
-        Production.get(country).push(production.name);
-      }
-    });
   });
 
-  return {
-    US: Production.get("US"),
-    UK: Production.get("UK"),
-    ROW: Production.get("ROW"),
-  };
+  return result;
 };
