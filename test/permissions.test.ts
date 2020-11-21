@@ -31,8 +31,9 @@ import { permissions } from "../src/permissions";
 
 describe("Permissions", () => {
   it.each([
-    [[], { US: [], UK: [], ROW: [] }],
+    ["no", [], { US: [], UK: [], ROW: [] }],
     [
+      "no allow or deny",
       [{ name: "production1", allow: [], deny: [] }],
       {
         US: ["production1"],
@@ -41,6 +42,7 @@ describe("Permissions", () => {
       },
     ],
     [
+      "allow US",
       [{ name: "production1", allow: ["US"], deny: [] }],
       {
         US: ["production1"],
@@ -49,6 +51,7 @@ describe("Permissions", () => {
       },
     ],
     [
+      "deny US",
       [{ name: "production1", allow: [], deny: ["US"] }],
       {
         US: [],
@@ -57,6 +60,7 @@ describe("Permissions", () => {
       },
     ],
     [
+      "allow UK and US",
       [{ name: "production1", allow: ["UK", "US"], deny: [] }],
       {
         US: ["production1"],
@@ -65,6 +69,7 @@ describe("Permissions", () => {
       },
     ],
     [
+      "allow UK deny US",
       [{ name: "production1", allow: ["UK"], deny: ["US"] }],
       {
         US: [],
@@ -73,6 +78,7 @@ describe("Permissions", () => {
       },
     ],
     [
+      "deny US and UK",
       [{ name: "production1", allow: [], deny: ["US", "UK"] }],
       {
         US: [],
@@ -81,6 +87,7 @@ describe("Permissions", () => {
       },
     ],
     [
+      "deny India",
       [{ name: "production1", allow: [], deny: ["IN"] }],
       {
         US: ["production1"],
@@ -89,6 +96,7 @@ describe("Permissions", () => {
       },
     ],
     [
+      "allow India",
       [{ name: "production1", allow: ["IN"], deny: [] }],
       {
         US: ["production1"],
@@ -96,7 +104,19 @@ describe("Permissions", () => {
         ROW: ["production1"],
       },
     ],
-  ])("returns correct object for input", (input, output) => {
-    expect(permissions(input)).toEqual(output);
-  });
+    [
+      "allow India deny UK",
+      [{ name: "production1", allow: ["IN"], deny: ["UK"] }],
+      {
+        US: ["production1"],
+        UK: [],
+        ROW: ["production1"],
+      },
+    ],
+  ])(
+    "with %s Production is included in the correct set",
+    (_contentType, input, output) => {
+      expect(permissions(input)).toEqual(output);
+    }
+  );
 });

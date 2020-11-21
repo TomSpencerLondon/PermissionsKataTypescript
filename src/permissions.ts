@@ -34,8 +34,10 @@ export const permissions = (productions: Production[]): Rights => {
 
     production.allow.forEach((country) => {
       if (ROW.has(country)) {
-        Production.forEach((value: string[]) => {
-          value.push(production.name);
+        Production.forEach((value: string[], key: string) => {
+          if (!production.deny.includes(key)) {
+            value.push(production.name);
+          }
         });
       } else {
         Production.get(country).push(production.name);
