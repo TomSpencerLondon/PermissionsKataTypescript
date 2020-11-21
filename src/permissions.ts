@@ -16,7 +16,7 @@ export const permissions = (productions: Production[]): Rights => {
     ["UK", []],
     ["ROW", []],
   ]);
-  const ROW: Map<string, string> = new Map([["IN", "ROW"]]);
+  const row = new Set(["IN", "ROW"]);
 
   productions.forEach((production) => {
     if (production.allow.length === 0 && production.deny.length === 0) {
@@ -32,7 +32,7 @@ export const permissions = (productions: Production[]): Rights => {
     }
 
     production.allow.forEach((country) => {
-      if (ROW.has(country)) {
+      if (row.has(country)) {
         Production.forEach((value: string[], key: string) => {
           if (!production.deny.includes(key)) {
             value.push(production.name);
