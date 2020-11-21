@@ -25,6 +25,18 @@
 // are not explicitly allowed in the US and the UK.
 //
 
+// Specification Questions
+// Why do we have an empty result if there is no production object?
+// Why are all three groups allowed if we don't have any rules?
+
+// All countries other than UK and US are removed from the list.
+
+// Specification: - Acceptance criteria
+// If allow is empty, consider the deny list
+// If allow is not empty, consider the allow list:
+//   - Deny all countries that are not listed in the Allow list
+// If allow is empty consider the deny list
+
 // Zero, One, Many, Boundary conditions, Interfaces (create interfaces want to use), Exercise exceptions, Simple tests and Simple solutions
 
 import { permissions } from "../src/permissions";
@@ -78,6 +90,15 @@ describe("Permissions", () => {
       },
     ],
     [
+      "allow UK allow UK",
+      [{ name: "production1", allow: ["UK"], deny: ["UK"] }],
+      {
+        US: [],
+        UK: ["production1"],
+        ROW: [],
+      },
+    ],
+    [
       "deny US and UK",
       [{ name: "production1", allow: [], deny: ["US", "UK"] }],
       {
@@ -105,6 +126,15 @@ describe("Permissions", () => {
       },
     ],
     [
+      "allow and deny India",
+      [{ name: "production1", allow: ["IN"], deny: ["IN"] }],
+      {
+        US: ["production1"],
+        UK: ["production1"],
+        ROW: ["production1"],
+      },
+    ],
+    [
       "allow India deny UK",
       [{ name: "production1", allow: ["IN"], deny: ["UK"] }],
       {
@@ -119,4 +149,50 @@ describe("Permissions", () => {
       expect(permissions(input)).toEqual(output);
     }
   );
+
+  describe("more than one production", () => {
+    it.each([
+      [
+        "no allow or deny",
+        [
+          { name: "production1", allow: [], deny: [] },
+          { name: "production2", allow: [], deny: [] },
+        ],
+        {
+          US: ["production1", "production2"],
+          UK: ["production1", "production2"],
+          ROW: ["production1", "production2"],
+        },
+      ],
+      [
+        "allow US",
+        [
+          { name: "production1", allow: ["US"], deny: [] },
+          { name: "production2", allow: ["US"], deny: [] },
+        ],
+        {
+          US: ["production1", "production2"],
+          UK: [],
+          ROW: [],
+        },
+      ],
+      [
+        "allow US",
+        [
+          { name: "production1", allow: ["US"], deny: [] },
+          { name: "production2", allow: ["UK"], deny: [] },
+        ],
+        {
+          US: ["production1"],
+          UK: ["production2"],
+          ROW: [],
+        },
+      ],
+    ])(
+      "with %s Production is included in the correct set",
+      (_contentType, input, output) => {
+        expect(permissions(input)).toEqual(output);
+      }
+    );
+  });
 });
